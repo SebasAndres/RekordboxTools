@@ -4,8 +4,8 @@
 using namespace std;
 
 // dst_folder ++ filename
-fs::path getDestinyName(fs::path originalPath){ 
-      return DST_FOLDER / originalPath.filename();
+fs::path getDestinyName(fs::path originalPath, fs::path destiny){ 
+      return destiny / originalPath.filename();
 }
 
 // valida si es uno de los formatos aceptados
@@ -25,39 +25,42 @@ void registerNotCopiedFile(fs::path* notCopied, uint32_t& count, const fs::path&
 
 // vamos a realizar una copia al momento de leer la carpeta CONTENTS
 // por cada subcarpeta obtener y copiar los archivos terminados en .mp3 o .wav 
-void extractTracks(void){
+void extractTracks(fs::path& source, fs::path& destiny){
+
+      if (!(fs::exists(source))) { cerr << "ERROR: No existe la carpeta de origen" << endl; return; } 
+      if (!(fs::exists(destiny))) { cerr << "ERROR: No existe la carpeta de destino" << endl; return; } 
 
       fs::path* notCopiedFiles = new fs::path[MAX_FILES];
       uint32_t notCopiedCounter = 0;
       uint32_t copiedCounter = 0;
       uint8_t earlyStop = 0;
 
-      if (!(fs::exists(CONTENTS_FOLDER_PATH))) { cerr << "ERROR: No existe la carpeta de origen" << endl; return; } 
-
       cout << endl;
       cout << "Copiando archivos." << endl;
-      for (const auto& artistFolder: fs::directory_iterator(CONTENTS_FOLDER_PATH)){             // contents/artists
+      for (const auto& artistFolder: fs::directory_iterator(source)){             // contents/artists
             for (const auto& sourceDownloadFolder: fs::directory_iterator(artistFolder)){       // contents/artists/source
                   for (const auto& file: fs::directory_iterator(sourceDownloadFolder)){         // contents/artists/source/file
 
-                        fs::path srcPath = file.path();
-                        string extension = srcPath.extension();
+                        fs::path srcTrackPath = file.path();
+                        string trackExtension = srcTrackPath.extension();
 
                         // irregular file or invalid extension
-                        if (!(file.is_regular_file()) | !(isAllowedExtension(extension))) { registerNotCopiedFile(notCopiedFiles, notCopiedCounter, srcPath); continue; }  
+                        if (!(file.is_regular_file()) | !(isAllowedExtension(trackExtension))) { 
+                              registerNotCopiedFile(notCopiedFiles, notCopiedCounter, srcTrackPath);
+                              continue;
+                        }  
 
                         // copy file
-                        fs::path dstPath = getDestinyName(srcPath);
+                        fs::path dstTrackPath = getDestinyName(srcTrackPath, destiny);
                         try{
-                              fs::copy(srcPath, dstPath, fs::copy_options::overwrite_existing);
-                              cout << "(*) ["<< copiedCounter << "] Copiado exitosamente " << srcPath << endl;
-
+                              fs::copy(srcTrackPath, dstTrackPath, fs::copy_options::overwrite_existing);
+                              cout << "(*) ["<< copiedCounter << "] Copiado exitosamente " << srcTrackPath << endl;
                               copiedCounter++;
                               if (copiedCounter >= MAX_FILES) { earlyStop = 1; break; }
                         }
                         catch(const fs::filesystem_error& e){
                               cout << e.what() << endl;
-                              registerNotCopiedFile(notCopiedFiles, notCopiedCounter, srcPath);
+                              registerNotCopiedFile(notCopiedFiles, notCopiedCounter, srcTrackPath);
                         };
                   }
                   if (copiedCounter >= MAX_FILES) { break; } 

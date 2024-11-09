@@ -1,20 +1,21 @@
 #include <iostream>
-
-// external libraries
 #include <filesystem>
-#include <fstream>
-
-// data structures
-#include <string>
+namespace fs = std::filesystem;
 
 // internal
-#include "defines.h"
 #include "extractor.h"
 
 using namespace std;
-namespace fs = filesystem;
 
-int main(void){
-      extractTracks();
+int main(void){      
+
+      cout << "* Source path: ";
+      fs::path source; cin >> source;
+      cout << "* Destiny path: ";
+      fs::path destiny; cin >> destiny;
+
+      extractTracks(source, destiny);
+
+
 }
 
