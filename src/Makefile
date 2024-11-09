@@ -1,21 +1,20 @@
-# Variables
-CXX = g++
-CXXFLAGS = -std=c++17 -Wall -Wextra -ljsoncpp
-LDFLAGS = -lstdc++fs  # Necesario para <filesystem> en algunas implementaciones
-TARGET = files/copyFiles
+SOURCES = main.cpp extractor.cpp # Define los archivos fuente
+OBJECTS = $(SOURCES:.cpp=.o) # Define los archivos objeto
+CXX = g++ # Define el compilador
+CXXFLAGS = -std=c++17 -Wall -Wextra # Define las banderas de compilación
+TARGET = main # Define el nombre del ejecutable
 
-# Regla para compilar el objetivo final
-$(TARGET): main.o
-	$(CXX) main.o -o $(TARGET) $(LDFLAGS)
+# Regla para compilar el ejecutable
+$(TARGET): $(OBJECTS)
+	$(CXX) $(CXXFLAGS) -o $(TARGET) $(OBJECTS)
 
-# Regla para compilar el archivo fuente
-main.o: main.cpp
-	$(CXX) $(CXXFLAGS) -c main.cpp
+# Regla para compilar los archivos objeto
+%.o: %.cpp
+	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 # Regla para limpiar los archivos generados
 clean:
-	rm -f *.o $(TARGET)
+	rm -f $(OBJECTS) $(TARGET)
 
-# Regla para ejecutar el programa
-run: $(TARGET)
+run:
 	./$(TARGET)
