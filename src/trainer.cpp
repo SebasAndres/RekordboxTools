@@ -5,7 +5,6 @@ Trainer::Trainer(fs::path src, fs::path dst) : Functionality(src, dst) {
 }
 
 void Trainer::execute(){
-      cout << "dale pa, entrena el modelo !! :)" << endl;
       string command = "python3 train.py -dataset " + (string)this->src + " -results " + (string)this->dst; 
       int result = system(command.c_str());
       if(result) {
