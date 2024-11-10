@@ -12,6 +12,7 @@ namespace fs = filesystem;
 class Functionality {
       public:
             Functionality(fs::path src, fs::path dst);
+            virtual ~Functionality() = default; // Destructor virtual
             virtual void execute() = 0; // Método puramente virtual  
             
       protected:

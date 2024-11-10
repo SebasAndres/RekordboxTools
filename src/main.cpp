@@ -9,7 +9,7 @@ namespace fs = std::filesystem;
 using namespace std;
 
 // Factory Method
-Functionality* initializeFunctionality(uint8_t type, fs::path& source, fs::path& destiny){
+Functionality* setUpFunctionality(uint8_t type, fs::path& source, fs::path& destiny){
       if (type)
             return new Extractor(source, destiny);  
       return NULL;          
@@ -18,7 +18,7 @@ Functionality* initializeFunctionality(uint8_t type, fs::path& source, fs::path&
 int main(void){      
 
       cout << "Functionality: ";
-      uint8_t f; cin >> f;
+      uint8_t typeOfFunctionality; cin >> typeOfFunctionality;
 
       try{
             cout << "* Source path: ";
@@ -26,9 +26,9 @@ int main(void){
             cout << "* Destiny path: ";
             fs::path destiny; cin >> destiny;
 
-            Functionality* funct = initializeFunctionality(f, source, destiny);
-            funct->execute();   
-            delete funct;
+            Functionality* functionality = setUpFunctionality(typeOfFunctionality, source, destiny);
+            functionality->execute();   
+            delete functionality;
       }
       catch(const std::invalid_argument& e){
             cout << endl;

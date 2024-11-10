@@ -16,7 +16,7 @@ namespace fs = filesystem;
 class Extractor : public Functionality {
       public:             
             Extractor(fs::path src, fs::path dst);
-            void execute(); 
+            void execute() override; 
             uint8_t isAllowedExtension(const string& extension);
 
       private:
