@@ -2,8 +2,18 @@
 #ifndef TRAINER_H
 #define TRAINER_H
 
+// external
+#include <vector>
+
 // internal
 #include "functionality.h"
+
+
+struct TrackMetadata{
+      string trackId;
+      vector<float> vector;
+      string classification;
+};
 
 class Trainer : public Functionality {
       public:             
@@ -11,6 +21,7 @@ class Trainer : public Functionality {
             void execute() override; 
 
       private:
+            vector<float> extractFeatures(fs::path filePath);
 };
 
 #endif 

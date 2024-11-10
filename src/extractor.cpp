@@ -1,6 +1,5 @@
 #include "extractor.h"
 
-// Inicializacion de la funcionalidad
 Extractor::Extractor(fs::path src, fs::path dst) : Functionality(src, dst) {
       // Atributos específicos de Extractor
       this->notCopiedFiles = new fs::path[MAX_FILES];

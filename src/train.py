@@ -1,8 +1,6 @@
 """
 Trainer:
-- 1. Leer los archivos desde la carpeta con el Dataset.
-- 2. Leer el .csv con la clasificación de esos archivos.
-- 3. Entrenar el modelo y guardarlo para que C++ pueda levantarlo.
+Entrenar el modelo y guardarlo para que C++ pueda levantarlo.
 """
 
 import librosa
@@ -10,6 +8,7 @@ from argparse import ArgumentParser
 
 if __name__ == '__main__':
             
+      # Parseo y validación de argumentos
       parser = ArgumentParser(description='c++ args')    
       parser.add_argument(
             '-dataset',
@@ -26,13 +25,8 @@ if __name__ == '__main__':
       srcFolder = args.dataset 
       dstFolder = args.results
 
-      print("hola :)")
+      # Lectura del dataset
 
-      # # song_vector[track_id] = vector para la cancion de id track_id
-      # songs_vector = vectorizeTracks(dir=srcFolder+"/files") 
-
-      # # Y[track_id] = Expected classification for track_id
-      # expected = getExpectedOutputs(dir=srcFolder+"/files")
 
       # # Split dataset
       # x_train, x_test, y_train, y_tests = train_test_split(songs_vector, expected, 0.8)
