@@ -1,4 +1,4 @@
-SOURCES = main.cpp extractor.cpp functionality.cpp # Define los archivos fuente
+SOURCES = main.cpp extractor.cpp functionality.cpp trainer.cpp # Define los archivos fuente
 OBJECTS = $(SOURCES:.cpp=.o) # Define los archivos objeto
 CXX = g++ # Define el compilador
 CXXFLAGS = -std=c++17 -Wall -Wextra -g # Define las banderas de compilación

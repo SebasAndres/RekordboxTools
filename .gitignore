@@ -2,3 +2,4 @@ src/files/
 src/main
 .vscode/
 *.o
+.gdb_history

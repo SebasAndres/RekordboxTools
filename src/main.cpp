@@ -5,20 +5,23 @@ namespace fs = std::filesystem;
 // internal
 #include "functionality.h"
 #include "extractor.h"
+#include "trainer.h"
 
 using namespace std;
 
 // Factory Method
-Functionality* setUpFunctionality(uint8_t type, fs::path& source, fs::path& destiny){
-      if (type)
+Functionality* setUpFunctionality(string type, fs::path& source, fs::path& destiny){
+      if (type=="extract")
             return new Extractor(source, destiny);  
+      else if (type == "train")
+            return new Trainer(source, destiny);
       return NULL;          
 }
 
 int main(void){      
 
       cout << "Functionality: ";
-      uint8_t typeOfFunctionality; cin >> typeOfFunctionality;
+      string typeOfFunctionality; cin >> typeOfFunctionality;
 
       try{
             cout << "* Source path: ";
