@@ -55,6 +55,7 @@
             "typeinfo": "cpp",
             "fstream": "cpp",
             "filesystem": "cpp",
-            "cstring": "cpp"
+            "cstring": "cpp",
+            "unordered_set": "cpp"
       }
 }
