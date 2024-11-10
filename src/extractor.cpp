@@ -8,11 +8,6 @@ Extractor::Extractor(fs::path src, fs::path dst) : Functionality(src, dst) {
       this->copiedCounter = 0;
 }
 
-// Devuelve el destino del archivo a copiar dado el 
-fs::path Extractor::getDestinyName(fs::path copied_file){ 
-      return this->dst / copied_file.filename();
-}
-
 // Valida si es uno de los formatos aceptados
 uint8_t Extractor::isAllowedExtension(const string& extension){ 
       for(string ext: ALLOWED_EXTENSIONS)
@@ -22,8 +17,8 @@ uint8_t Extractor::isAllowedExtension(const string& extension){
 
 // Actualiza la flag con los registros no copiados
 void Extractor::registerNotCopiedFile(const fs::path& not_copied_file){
-      notCopiedFiles[notCopiedCounter] = not_copied_file;
-      notCopiedCounter++;
+      this->notCopiedFiles[this->notCopiedCounter] = not_copied_file;
+      this->notCopiedCounter++;
 }
 
 // Vamos a realizar una copia al momento de leer la carpeta CONTENTS
@@ -49,35 +44,35 @@ void Extractor::execute(){
                         }  
 
                         // validar si ya copiamos este archivo
-                        if (copiedFiles.find(srcTrackPath.filename()) != copiedFiles.end()) { 
+                        if (this->copiedFiles.find(srcTrackPath.filename()) != this->copiedFiles.end()) { 
                               cout << "(*) [SKIPPED] " << srcTrackPath.filename() << " ya fue copiado antes" << endl;
                               continue;
                         }
 
                         // copy file
-                        fs::path dstTrackPath = getDestinyName(srcTrackPath);
+                        fs::path dstTrackPath = this->dst / srcTrackPath.filename();
                         try{
                               fs::copy(srcTrackPath, dstTrackPath, fs::copy_options::overwrite_existing);
                               cout << "(*) ["<< copiedCounter << "] Copiado exitosamente " << srcTrackPath << endl;
-                              copiedFiles.insert(srcTrackPath.filename());
-                              copiedCounter++;
-                              if (copiedCounter >= MAX_FILES) { earlyStop = 1; break; }
+                              this->copiedFiles.insert(srcTrackPath.filename());
+                              this->copiedCounter++;
+                              if (this->copiedCounter >= MAX_FILES) { earlyStop = 1; break; }
                         }
                         catch(const fs::filesystem_error& e){
                               cout << e.what() << endl;
                               registerNotCopiedFile(srcTrackPath);
                         };
                   }
-                  if (copiedCounter >= MAX_FILES) { break; } 
+                  if (this->copiedCounter >= MAX_FILES) { break; } 
             }
-            if (copiedCounter >= MAX_FILES) { break; }
+            if (this->copiedCounter >= MAX_FILES) { break; }
       }
 
-      if(notCopiedCounter > 0){
+      if(this->notCopiedCounter > 0){
             cout << endl;
-            cout << "No se copiaron " << notCopiedCounter << " archivos" << endl;
-            for(uint32_t j=0; j<notCopiedCounter; j++)
-                  cout << "(*) No se copió: " << notCopiedFiles[j] << endl;
+            cout << "No se copiaron " << this->notCopiedCounter << " archivos" << endl;
+            for(uint32_t j=0; j<this->notCopiedCounter; j++)
+                  cout << "(*) No se copió: " << this->notCopiedFiles[j] << endl;
       }
 
       if(earlyStop){
@@ -85,5 +80,5 @@ void Extractor::execute(){
             cout << "El programa se terminó por early stop despues de " << MAX_FILES << " archivos copiados." << endl;
       }
 
-      delete[] notCopiedFiles;
+      delete[] this->notCopiedFiles;
 }
