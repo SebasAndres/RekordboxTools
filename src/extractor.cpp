@@ -29,7 +29,7 @@ void Extractor::registerNotCopiedFile(const fs::path& not_copied_file){
 // Vamos a realizar una copia al momento de leer la carpeta CONTENTS
 // por cada subcarpeta obtener y copiar los archivos terminados en .mp3 o .wav 
 void Extractor::execute(){
-
+ 
       cout << endl;
       cout << "Copiando archivos." << endl;
 
