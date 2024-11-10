@@ -1,43 +1,41 @@
-#include <iostream>
 #include "extractor.h"
 
-using namespace std;
+// Inicializacion de la funcionalidad
+Extractor::Extractor(fs::path src, fs::path dst) : Functionality(src, dst) {
 
-// dst_folder ++ filename
-fs::path getDestinyName(fs::path originalPath, fs::path destiny){ 
-      return destiny / originalPath.filename();
+      // Inicialización de los atributos específicos de Extractor
+      this->notCopiedFiles = new fs::path[MAX_FILES];
+      this->notCopiedCounter = 0;
+      this->copiedCounter = 0;
 }
 
-// valida si es uno de los formatos aceptados
-uint8_t isAllowedExtension(const string& extension){ 
-      for(string ext: ALLOWED_EXTENSIONS){
-            if (ext==extension)    
-                  return 1;
-      }
+// Devuelve el destino del archivo a copiar dado el 
+fs::path Extractor::getDestinyName(fs::path copied_file){ 
+      return this->dst / copied_file.filename();
+}
+
+// Valida si es uno de los formatos aceptados
+uint8_t Extractor::isAllowedExtension(const string& extension){ 
+      for(string ext: ALLOWED_EXTENSIONS)
+            if (ext==extension){ return 1; }
       return 0;
 }
 
-// actualiza la flag con los registros no copiados
-void registerNotCopiedFile(fs::path* notCopied, uint32_t& count, const fs::path& path){
-      notCopied[count] = path;
-      count++;
+// Actualiza la flag con los registros no copiados
+void Extractor::registerNotCopiedFile(const fs::path& not_copied_file){
+      notCopiedFiles[notCopiedCounter] = not_copied_file;
+      notCopiedCounter++;
 }
 
-// vamos a realizar una copia al momento de leer la carpeta CONTENTS
+// Vamos a realizar una copia al momento de leer la carpeta CONTENTS
 // por cada subcarpeta obtener y copiar los archivos terminados en .mp3 o .wav 
-void extractTracks(fs::path& source, fs::path& destiny){
+void Extractor::execute(){
 
-      if (!(fs::exists(source))) { cerr << "ERROR: No existe la carpeta de origen" << endl; return; } 
-      if (!(fs::exists(destiny))) { cerr << "ERROR: No existe la carpeta de destino" << endl; return; } 
-
-      fs::path* notCopiedFiles = new fs::path[MAX_FILES];
-      uint32_t notCopiedCounter = 0;
-      uint32_t copiedCounter = 0;
       uint8_t earlyStop = 0;
 
       cout << endl;
       cout << "Copiando archivos." << endl;
-      for (const auto& artistFolder: fs::directory_iterator(source)){             // contents/artists
+      for (const auto& artistFolder: fs::directory_iterator(this->src)){          // contents/artists
             for (const auto& sourceDownloadFolder: fs::directory_iterator(artistFolder)){       // contents/artists/source
                   for (const auto& file: fs::directory_iterator(sourceDownloadFolder)){         // contents/artists/source/file
 
@@ -46,12 +44,12 @@ void extractTracks(fs::path& source, fs::path& destiny){
 
                         // irregular file or invalid extension
                         if (!(file.is_regular_file()) | !(isAllowedExtension(trackExtension))) { 
-                              registerNotCopiedFile(notCopiedFiles, notCopiedCounter, srcTrackPath);
+                              registerNotCopiedFile(srcTrackPath);
                               continue;
                         }  
 
                         // copy file
-                        fs::path dstTrackPath = getDestinyName(srcTrackPath, destiny);
+                        fs::path dstTrackPath = getDestinyName(srcTrackPath);
                         try{
                               fs::copy(srcTrackPath, dstTrackPath, fs::copy_options::overwrite_existing);
                               cout << "(*) ["<< copiedCounter << "] Copiado exitosamente " << srcTrackPath << endl;
@@ -60,7 +58,7 @@ void extractTracks(fs::path& source, fs::path& destiny){
                         }
                         catch(const fs::filesystem_error& e){
                               cout << e.what() << endl;
-                              registerNotCopiedFile(notCopiedFiles, notCopiedCounter, srcTrackPath);
+                              registerNotCopiedFile(srcTrackPath);
                         };
                   }
                   if (copiedCounter >= MAX_FILES) { break; } 
