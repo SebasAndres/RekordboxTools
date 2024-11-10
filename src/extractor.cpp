@@ -48,11 +48,18 @@ void Extractor::execute(){
                               continue;
                         }  
 
+                        // validar si ya copiamos este archivo
+                        if (copiedFiles.find(srcTrackPath.filename()) != copiedFiles.end()) { 
+                              cout << "(*) [SKIPPED] " << srcTrackPath.filename() << " ya fue copiado antes" << endl;
+                              continue;
+                        }
+
                         // copy file
                         fs::path dstTrackPath = getDestinyName(srcTrackPath);
                         try{
                               fs::copy(srcTrackPath, dstTrackPath, fs::copy_options::overwrite_existing);
                               cout << "(*) ["<< copiedCounter << "] Copiado exitosamente " << srcTrackPath << endl;
+                              copiedFiles.insert(srcTrackPath.filename());
                               copiedCounter++;
                               if (copiedCounter >= MAX_FILES) { earlyStop = 1; break; }
                         }

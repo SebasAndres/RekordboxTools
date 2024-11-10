@@ -4,6 +4,7 @@
 
 // internal
 #include "functionality.h"
+#include <unordered_set>
 
 class Extractor : public Functionality {
       public:             
@@ -12,10 +13,11 @@ class Extractor : public Functionality {
             uint8_t isAllowedExtension(const string& extension);
 
       private:
+            unordered_set<fs::path> copiedFiles;
+            uint32_t copiedCounter;
             fs::path* notCopiedFiles;
             uint32_t notCopiedCounter;
-            uint32_t copiedCounter;
-
+            
             fs::path getDestinyName(fs::path file2copy);
             void registerNotCopiedFile(const fs::path& not_copied_file);
 };
