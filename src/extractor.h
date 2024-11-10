@@ -1,16 +1,8 @@
-// extractor.h
+// Functionality >> Extractor
 #ifndef EXTRACTOR_H
 #define EXTRACTOR_H
 
-#include <iostream>
-#include <fstream>
-#include <filesystem>
-
-using namespace std;
-namespace fs = filesystem;
-
 // internal
-#include "defines.h"
 #include "functionality.h"
 
 class Extractor : public Functionality {
@@ -28,4 +20,4 @@ class Extractor : public Functionality {
             void registerNotCopiedFile(const fs::path& not_copied_file);
 };
 
-#endif // EXTRACTOR_H
+#endif 

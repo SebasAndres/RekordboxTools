@@ -2,8 +2,7 @@
 
 // Inicializacion de la funcionalidad
 Extractor::Extractor(fs::path src, fs::path dst) : Functionality(src, dst) {
-
-      // Inicialización de los atributos específicos de Extractor
+      // Atributos específicos de Extractor
       this->notCopiedFiles = new fs::path[MAX_FILES];
       this->notCopiedCounter = 0;
       this->copiedCounter = 0;
@@ -31,10 +30,11 @@ void Extractor::registerNotCopiedFile(const fs::path& not_copied_file){
 // por cada subcarpeta obtener y copiar los archivos terminados en .mp3 o .wav 
 void Extractor::execute(){
 
-      uint8_t earlyStop = 0;
-
       cout << endl;
       cout << "Copiando archivos." << endl;
+
+      uint8_t earlyStop = 0; // 1 si se frenó por sobrepasar el límite de copia establecido
+
       for (const auto& artistFolder: fs::directory_iterator(this->src)){          // contents/artists
             for (const auto& sourceDownloadFolder: fs::directory_iterator(artistFolder)){       // contents/artists/source
                   for (const auto& file: fs::directory_iterator(sourceDownloadFolder)){         // contents/artists/source/file

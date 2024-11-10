@@ -1,10 +1,11 @@
-// MiClase.h
+// Parent functionality class
 #ifndef FUNCTIONALITY_H
 #define FUNCTIONALITY_H
 
 #include <iostream>
 #include <fstream>
 #include <filesystem>
+#include "defines.h"
 
 using namespace std;
 namespace fs = filesystem;
