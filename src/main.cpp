@@ -1,47 +1,36 @@
 #include <iostream>
 #include <filesystem>
-namespace fs = std::filesystem;
 
-// internal
+// model
 #include "model/functionality.h"
 #include "model/extractor.h"
 #include "model/classifier_wrapper.h"
 
+// GUI
+#include <SFML/Graphics.hpp>
+
 using namespace std;
+namespace fs = filesystem;
 
-// Factory Method
-Functionality* setUpFunctionality(string type){
-      if (type=="extract"){
-            cout << "* Source path: "; fs::path source; cin >> source;
-            cout << "* Destiny path: "; fs::path destiny; cin >> destiny;
-            return new Extractor(source, destiny);  
-      }
-      else if (type == "classify"){
-            cout << "* Source path: "; fs::path source; cin >> source;
-            cout << "* Destiny path: "; fs::path destiny; cin >> destiny;
-            return new ClassifierWrapper(source, destiny);        
-      }
-      return nullptr; 
-}
+int main(void){     
 
-int main(void){      
+      // Main windows
+      sf::RenderWindow window(sf::VideoMode(800, 600), "Rekordbox Tool \U0001F60A");
 
-      cout << "Functionality: ";
-      string typeOfFunctionality; cin >> typeOfFunctionality;
+      // Render window loop
+      while (window.isOpen()) {
 
-      try{
-            Functionality* functionality = setUpFunctionality(typeOfFunctionality);
-            if (functionality == nullptr) { throw::runtime_error("Invalid functionality selected"); }
-            functionality->execute();   
-            delete functionality;
-      }
-      catch(const std::runtime_error& e){
-            cout << endl;
-            cout << "----------------------------------------------------------------------------------------------------" << endl;
-            cout << "ERROR | No se ejecutó la funcionalidad" << endl;
-            cout << e.what() << endl;
-            cout << "----------------------------------------------------------------------------------------------------" << endl;
+            // Handle events & update
+            sf::Event event;
+            while (window.pollEvent(event)) {
+                  if (event.type == sf::Event::Closed)
+                  window.close();
+            }
+
+            // Render again
+            window.clear(sf::Color::White);
+            window.display();
       }
 
-      
+      return 0;      
 }

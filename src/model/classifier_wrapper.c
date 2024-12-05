@@ -46,7 +46,6 @@ int ClassifierWrapper::copyFilesBasedOnClassificationResults(){
             };
         }
     }
-
     return 0;
 }
 
