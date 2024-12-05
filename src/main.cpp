@@ -3,9 +3,9 @@
 namespace fs = std::filesystem;
 
 // internal
-#include "functionality.h"
-#include "extractor.h"
-#include "trainer.h"
+#include "model/functionality.h"
+#include "model/extractor.h"
+#include "model/classifier_wrapper.h"
 
 using namespace std;
 
@@ -16,16 +16,12 @@ Functionality* setUpFunctionality(string type){
             cout << "* Destiny path: "; fs::path destiny; cin >> destiny;
             return new Extractor(source, destiny);  
       }
-      else if (type == "train"){
-            cout << "* Dataset path: "; fs::path source; cin >> source;
-            cout << "* Results path: "; fs::path destiny; cin >> destiny;
-            return new Trainer(source, destiny);
-      } 
-      else {
-            cout << "* Algun dato que necesite: ";
-            return NULL; // hacer algo
+      else if (type == "classify"){
+            cout << "* Source path: "; fs::path source; cin >> source;
+            cout << "* Destiny path: "; fs::path destiny; cin >> destiny;
+            return new ClassifierWrapper(source, destiny);        
       }
-      return NULL;          
+      return nullptr; 
 }
 
 int main(void){      
@@ -35,16 +31,16 @@ int main(void){
 
       try{
             Functionality* functionality = setUpFunctionality(typeOfFunctionality);
-            if (functionality == NULL) { throw::runtime_error("Invalid functionality selected"); }
+            if (functionality == nullptr) { throw::runtime_error("Invalid functionality selected"); }
             functionality->execute();   
             delete functionality;
       }
-      catch(const std::invalid_argument& e){
+      catch(const std::runtime_error& e){
             cout << endl;
-            cout << "--------------------------------------------" << endl;
+            cout << "----------------------------------------------------------------------------------------------------" << endl;
             cout << "ERROR | No se ejecutó la funcionalidad" << endl;
             cout << e.what() << endl;
-            cout << "--------------------------------------------" << endl;
+            cout << "----------------------------------------------------------------------------------------------------" << endl;
       }
 
       

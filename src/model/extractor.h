@@ -20,6 +20,7 @@ class Extractor : public Functionality {
             
             fs::path getDestinyName(fs::path file2copy);
             void registerNotCopiedFile(const fs::path& not_copied_file);
+            void extractAudioFeaturesAndSaveThem();
 };
 
 #endif 

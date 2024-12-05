@@ -81,3 +81,4 @@ void Extractor::execute(){
 
       delete[] this->notCopiedFiles;
 }
+
