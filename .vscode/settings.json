@@ -62,6 +62,11 @@
             "defines.h": "c",
             "complex": "c",
             "set": "c",
-            "cinttypes": "c"
+            "cinttypes": "c",
+            "button.h": "c",
+            "forward_list": "c",
+            "gui_object.h": "c",
+            "graphics.hpp": "c",
+            "valarray": "cpp"
       }
 }

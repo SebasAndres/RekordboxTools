@@ -1,4 +1,5 @@
-SOURCES = main.cpp model/extractor.cpp model/functionality.cpp model/classifier_wrapper.c # Define los archivos fuente
+SOURCES = main.cpp model/extractor.cpp model/functionality.cpp model/classifier_wrapper.cpp gui/app.cpp gui/button.cpp gui/gui_object.cpp
+
 OBJECTS = $(SOURCES:.cpp=.o) # Define los archivos objeto
 
 CXX = g++ # Define el compilador

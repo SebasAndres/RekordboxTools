@@ -7,30 +7,16 @@
 #include "model/classifier_wrapper.h"
 
 // GUI
-#include <SFML/Graphics.hpp>
+#include "gui/app.h"
 
 using namespace std;
 namespace fs = filesystem;
 
 int main(void){     
-
-      // Main windows
-      sf::RenderWindow window(sf::VideoMode(800, 600), "Rekordbox Tool \U0001F60A");
-
-      // Render window loop
-      while (window.isOpen()) {
-
-            // Handle events & update
-            sf::Event event;
-            while (window.pollEvent(event)) {
-                  if (event.type == sf::Event::Closed)
-                  window.close();
-            }
-
-            // Render again
-            window.clear(sf::Color::White);
-            window.display();
+      AppGui app = AppGui(800, 600, "Rekordbox Tools");
+      while (app.is_open()) {
+            app.handle_events();
+            app.render();
       }
-
       return 0;      
 }
