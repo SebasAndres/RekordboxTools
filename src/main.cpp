@@ -13,7 +13,7 @@ using namespace std;
 namespace fs = filesystem;
 
 int main(void){     
-      AppGui app = AppGui(800, 600, "Rekordbox Tools");
+      AppGui app = AppGui(600, 500, "Rekordbox Tools");
       while (app.is_open()) {
             app.handle_events();
             app.render();

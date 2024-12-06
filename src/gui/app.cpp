@@ -1,41 +1,72 @@
 #include "app.h"
 
-AppGui::AppGui(int width, int height, string title){
+int computeButtonWidth(int window_width, int window_height){
+    return window_width/3;
+}
 
-    this->width = width;
-    this->height = height;
-    this->title = title;
-    this->background_color = sf::Color::Black; 
-    this->window = new sf::RenderWindow(sf::VideoMode(width, height), title);   
-	
-    sf::Font font;
-    font.loadFromFile("fonts/Roboto-Black.ttf");
-	inputText = "";
+int computeButtonHeight(int window_width, int window_height){
+    return window_height/7;
+}
+
+int dx_CENTER(int window_width, int guiObject_width){
+    return (window_width-guiObject_width)/2;
+}
+
+void AppGui::initialize_buttons(){
+    int BUTTON_WIDTH = computeButtonWidth(window_width, window_height);
+    int dx_BUTTON = dx_CENTER(window_width, BUTTON_WIDTH);
+    int BUTTON_HEIGHT = computeButtonHeight(window_width, window_height);
+    int y0_BUTTON_POSITION = window_height * 0.6;
+    int pady_BUTTONS = BUTTON_HEIGHT/4;
 
     Button* extract_button = new Button(
-                                200, // width
-                                100, // height 
-                                50,  // x
-                                50,  // y
-                                sf::Color::White,
-                                []() {
-                                    cout << "hola" << endl;
-                                }
-                            );
+                    BUTTON_WIDTH, // width
+                    BUTTON_HEIGHT, // height 
+                    dx_BUTTON,  // x
+                    y0_BUTTON_POSITION,  // y
+                    sf::Color::Blue,
+                    "gui/fonts/Roboto/Roboto-Regular.ttf",
+                    "Extract",
+                    []() {
+                        cout << "> extrayendo" << endl;
+                    }
+                );
 
-    Button* bt2 = new Button(
-                                200, // width
-                                100, // height 
-                                400,  // x
-                                50,  // y
-                                sf::Color::Green,
-                                []() {
-                                    cout << "hola" << endl;
-                                }
-                            );
+    Button* classify_button = new Button(
+                    BUTTON_WIDTH, // width
+                    BUTTON_HEIGHT, // height 
+                    dx_BUTTON,  // x
+                    y0_BUTTON_POSITION+BUTTON_HEIGHT+pady_BUTTONS,  // y
+                    sf::Color::Blue,
+                    "gui/fonts/Roboto/Roboto-Regular.ttf",
+                    "Classify",
+                    []() {
+                        cout << "> clasificando" << endl;
+                    }
+                );
 
     gui_objects.push_back(extract_button);
-    gui_objects.push_back(bt2);
+    gui_objects.push_back(classify_button);
+}
+
+AppGui::AppGui(int width, int height, string title){
+
+    this->window_width = width;
+    this->window_height = height;
+    this->title = title;
+    this->background_color = sf::Color::Black; 
+    this->window = new sf::RenderWindow(sf::VideoMode(width, height), title, sf::Style::Close);   
+
+	inputText = "";
+    
+    initialize_buttons();
+}
+
+AppGui::~AppGui() {
+    delete window; 
+    for (auto obj : gui_objects) {
+        delete obj; 
+    }
 }
 
 void AppGui::handle_text_entered(sf::Event event){
@@ -51,7 +82,7 @@ void AppGui::handle_text_entered(sf::Event event){
 }
 
 void AppGui::handle_mouse_movement(int x, int y){
-    // Por cada objeto de la APP ver si está sobre el y reaccionar
+    // Por cada objeto de la APP ver si está sobre él y reaccionar
     for(GUIObject* obj: this->gui_objects){
         if (obj->includesPoint(x,y)) { obj->mouseOverIt(); }
         else { obj->mouseNotOverIt(); }
@@ -92,7 +123,7 @@ void AppGui::handle_events(){
 void AppGui::render(){
     window->clear();
     for(GUIObject* obj: gui_objects){
-        window->draw(obj->getDrawable());
+        obj->drawOnTarget(this->window);
     }
     window->display();
 }

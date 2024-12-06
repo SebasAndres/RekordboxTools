@@ -10,10 +10,8 @@ class GUIObject{
         int height;
         int x;
         int y;
-        sf::Drawable* shape;
 
-        sf::Drawable& getDrawable() { return *shape; }
-
+        virtual void drawOnTarget(sf::RenderWindow* target) = 0;
         virtual void mouseOverIt() = 0;
         virtual void mouseNotOverIt() = 0; 
         virtual void mousePressed() = 0;
