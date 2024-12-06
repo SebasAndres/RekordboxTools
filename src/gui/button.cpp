@@ -5,7 +5,16 @@ bool isLightColored(sf::Color aColor){
     return brightness > 128.0f;
 }
 
-Button::Button(int width, int height, int x, int y, sf::Color bgColor, std::string fontPath, std::string text, void (*onClickFunc)()) 
+Button::Button(
+    int width,
+    int height,
+    int x,
+    int y,
+    sf::Color bgColor,
+    std::string fontPath,
+    std::string text,
+    std::function<void()> onClickFunc
+    )     
     : onClick(onClickFunc), bgColor(bgColor) {
 
     this->width = width;
@@ -18,14 +27,13 @@ Button::Button(int width, int height, int x, int y, sf::Color bgColor, std::stri
     box->setFillColor(bgColor);
 
     if (!font.loadFromFile(fontPath)) {
-        std::cerr << "Error: No se pudo cargar la fuente ../fonts/Roboto-Black.ttf" << std::endl;
-        // Manejar el error de carga de la fuente aquí
+        std::cerr << "Error: No se pudo cargar la fuente" << std::endl;
     }
 
-    btText = new sf::Text();
-    btText->setFont(font);
-    btText->setString(text);
-    btText->setCharacterSize(24);
+    text_view = new sf::Text();
+    text_view->setFont(font);
+    text_view->setString(text);
+    text_view->setCharacterSize(height/3.7);
 
     if (isLightColored(this->bgColor)){
         fgColor = sf::Color::Black;
@@ -34,18 +42,18 @@ Button::Button(int width, int height, int x, int y, sf::Color bgColor, std::stri
         fgColor = sf::Color::White;        
     }
 
-    btText->setFillColor(fgColor); 
-    btText->setPosition(x + 10, y + 10); 
+    text_view->setFillColor(fgColor); 
+    text_view->setPosition(x + 10, y + 10); 
 }
 
 Button::~Button() {
     delete box;
-    delete btText;
+    delete text_view;
 }
 
 void Button::drawOnTarget(sf::RenderWindow* aWindow){
     aWindow->draw(*box);    
-    aWindow->draw(*btText);
+    aWindow->draw(*text_view);
 }
 
 void Button::mouseOverIt(){
@@ -56,14 +64,14 @@ void Button::mouseOverIt(){
         coloredFg = sf::Color::Black;
     }
     box->setFillColor(coloredBg);
-    btText->setFillColor(coloredFg);
+    text_view->setFillColor(coloredFg);
 }
 
 void Button::mouseNotOverIt(){
     box->setFillColor(bgColor);
-    btText->setFillColor(fgColor);
+    text_view->setFillColor(fgColor);
 }
 
-void Button::mousePressed(){
+void Button::mousePressed(AppGui* app){
     onClick();
 }

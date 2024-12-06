@@ -5,7 +5,10 @@
 #include <vector>
 #include <SFML/Graphics.hpp>
 
+#include "../model/extractor.h"
+
 #include "button.h"
+#include "text_box.h"
 
 using namespace std;
 
@@ -18,21 +21,28 @@ class AppGui {
         void render();
         bool is_open();
 
+        void set_keyboard_ownership_to(TextBox* textbox);
+
     private:
         int window_width;
         int window_height;
         string title;
         sf::Color background_color;
         sf::RenderWindow* window;
-        
         vector<GUIObject*> gui_objects;
- 
-        string inputText; // to delete
+        
+        TextBox* src_text_box;
+        TextBox* dst_text_box;
 
+        TextBox* keyboard_owner;
+
+        // Handlers
         void handle_text_entered(sf::Event event);
         void handle_mouse_movement(int x, int y);
         void handle_mouse_pressed(sf::Event::MouseButtonEvent button);
 
+        // VISUAL
         void initialize_buttons();
+        void initialize_text_boxs();
 };
 #endif

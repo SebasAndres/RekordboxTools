@@ -1,4 +1,4 @@
-SOURCES = main.cpp model/extractor.cpp model/functionality.cpp model/classifier_wrapper.cpp gui/app.cpp gui/button.cpp gui/gui_object.cpp
+SOURCES = main.cpp model/extractor.cpp model/functionality.cpp model/classifier_wrapper.cpp gui/app.cpp gui/button.cpp gui/gui_object.cpp gui/text_box.cpp
 
 OBJECTS = $(SOURCES:.cpp=.o) # Define los archivos objeto
 
