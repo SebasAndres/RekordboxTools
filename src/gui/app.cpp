@@ -12,6 +12,20 @@ int dx_CENTER(int window_width, int guiObject_width){
     return (window_width-guiObject_width)/2;
 }
 
+std::string ltrim(const std::string& s) {
+    size_t start = s.find_first_not_of(" \t\n\r\f\v");
+    return (start == std::string::npos) ? "" : s.substr(start);
+}
+
+std::string rtrim(const std::string& s) {
+    size_t end = s.find_last_not_of(" \t\n\r\f\v");
+    return (end == std::string::npos) ? "" : s.substr(0, end + 1);
+}
+
+std::string trim(const std::string& s) {
+    return rtrim(ltrim(s));
+}
+
 void AppGui::initialize_text_boxs(){
     src_text_box = new TextBox(200,30,200,200,"gui/fonts/Roboto/Roboto-Regular.ttf","Source folder", true);
     dst_text_box = new TextBox(200,30,200,240,"gui/fonts/Roboto/Roboto-Regular.ttf","Destiny folder", false);
@@ -37,10 +51,9 @@ void AppGui::initialize_buttons(){
                     sf::Color::Blue,
                     "gui/fonts/Roboto/Roboto-Regular.ttf",
                     "Extract",
-                    [srcTextBox=src_text_box, dstTextBox=dst_text_box]() {
-                        cout << "> extrayendo" << endl;
-                        string src = srcTextBox->getContent();
-                        string dst = dstTextBox->getContent();
+                    [](AppGui* app) {
+                        std::string src = trim(app->src_folder_text());
+                        std::string dst = trim(app->dst_folder_text());
                         Extractor* extractor = new Extractor(src, dst);
                         extractor->execute();          
                     }
@@ -54,8 +67,11 @@ void AppGui::initialize_buttons(){
                     sf::Color::Blue,
                     "gui/fonts/Roboto/Roboto-Regular.ttf",
                     "Classify",
-                    []() {
-                        cout << "> clasificando" << endl;
+                    [](AppGui* app){
+                        std::string src = trim(app->src_folder_text());
+                        std::string dst = trim(app->dst_folder_text());
+                        ClassifierWrapper* classifier = new ClassifierWrapper(src, dst);
+                        classifier->execute();          
                     }
                 );
 
@@ -64,7 +80,6 @@ void AppGui::initialize_buttons(){
 }
 
 AppGui::AppGui(int width, int height, string title){
-
     this->window_width = width;
     this->window_height = height;
     this->title = title;
@@ -109,19 +124,15 @@ void AppGui::handle_events(){
     sf::Event event;	
     while (this->window->pollEvent(event)) {
 		switch (event.type) {
- 
             case sf::Event::Closed: 
                 this->window->close();
                 break;
-
             case sf::Event::TextEntered:
                 handle_text_entered(event);
                 break;
-
             case sf::Event::MouseMoved: 
                 handle_mouse_movement(event.mouseMove.x, event.mouseMove.y);
                 break;
-
             case sf::Event::MouseButtonPressed: 
                 handle_mouse_pressed(event.mouseButton);
                 break;
@@ -139,4 +150,12 @@ void AppGui::render(){
 
 bool AppGui::is_open(){
     return window->isOpen();
+}
+
+std::string AppGui::src_folder_text(){
+    return this->src_text_box->getContent();    
+}
+
+std::string AppGui::dst_folder_text(){
+    return this->dst_text_box->getContent();    
 }

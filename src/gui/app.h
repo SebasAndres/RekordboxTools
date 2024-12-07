@@ -4,8 +4,12 @@
 #include <iostream>
 #include <vector>
 #include <SFML/Graphics.hpp>
+#include <algorithm>
+#include <cctype> 
+#include "string.h"
 
 #include "../model/extractor.h"
+#include "../model/classifier_wrapper.h"
 
 #include "button.h"
 #include "text_box.h"
@@ -22,6 +26,9 @@ class AppGui {
         bool is_open();
 
         void set_keyboard_ownership_to(TextBox* textbox);
+
+        std::string src_folder_text();
+        std::string dst_folder_text();
 
     private:
         int window_width;

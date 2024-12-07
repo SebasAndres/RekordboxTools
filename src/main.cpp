@@ -1,11 +1,6 @@
 #include <iostream>
 #include <filesystem>
 
-// model
-#include "model/functionality.h"
-#include "model/extractor.h"
-#include "model/classifier_wrapper.h"
-
 // GUI
 #include "gui/app.h"
 

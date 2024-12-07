@@ -1,4 +1,5 @@
 #include "button.h"
+#include "app.h"
 
 bool isLightColored(sf::Color aColor){
     float brightness = 0.299f * aColor.r + 0.587f * aColor.g + 0.114f * aColor.b;
@@ -13,8 +14,8 @@ Button::Button(
     sf::Color bgColor,
     std::string fontPath,
     std::string text,
-    std::function<void()> onClickFunc
-    )     
+    std::function<void(AppGui*)> onClickFunc
+    )      
     : onClick(onClickFunc), bgColor(bgColor) {
 
     this->width = width;
@@ -73,5 +74,8 @@ void Button::mouseNotOverIt(){
 }
 
 void Button::mousePressed(AppGui* app){
-    onClick();
+    std::thread([this, app]() {
+        this->onClick(app);
+    }).detach();
 }
+

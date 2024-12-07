@@ -67,6 +67,9 @@
             "forward_list": "c",
             "gui_object.h": "c",
             "graphics.hpp": "c",
-            "valarray": "cpp"
+            "valarray": "cpp",
+            "semaphore": "c",
+            "stop_token": "c",
+            "thread": "c"
       }
 }

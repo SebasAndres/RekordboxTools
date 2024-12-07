@@ -4,6 +4,7 @@
 #include <iostream>
 #include <functional> 
 #include <algorithm> 
+#include <thread>
 #include <SFML/Graphics.hpp>
 #include "gui_object.h"
 
@@ -11,7 +12,15 @@ class AppGui; // Declaracion para evitar imports circulares
 
 class Button : public GUIObject {
     public: 
-        Button(int width, int height, int x, int y, sf::Color color, std::string fontPath, std::string text, std::function<void()> onClickFunc);
+        Button(
+            int width,
+            int height,
+            int x,
+            int y,
+            sf::Color color,
+            std::string fontPath,
+            std::string text,
+            std::function<void(AppGui*)> onClickFunc);
         ~Button();
 
         void drawOnTarget(sf::RenderWindow* window) override;
@@ -27,7 +36,7 @@ class Button : public GUIObject {
         sf::Color fgColor;
         sf::Font font;
 
-        std::function<void()> onClick; 
+        std::function<void(AppGui*)> onClick; 
 };
 
 #endif // BUTTON_H
