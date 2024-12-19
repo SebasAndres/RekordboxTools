@@ -27,8 +27,12 @@ class AppGui {
         bool is_open();
 
         void set_keyboard_ownership_to(TextBox* aTextbox);
-        std::string src_folder_text();
-        std::string dst_folder_text();
+        std::string get_source_folder();
+        std::string get_destiny_folder();
+
+        bool ableToRun();
+        void enableFunctionalities();
+        void disableFunctionalities();
 
         void notify(string aMessage);
 
@@ -42,11 +46,13 @@ class AppGui {
         vector<GUIObject*> gui_objects;
 
         TextBox* keyboard_owner;
-        TextBox* src_text_box;
-        TextBox* dst_text_box;
+        TextBox* source_text_box;
+        TextBox* destiny_text_box;
 
         sf::Texture background_texture;
         sf::Sprite background_sprite;      
+
+        bool able_to_run_functionality;
 
         // Handlers
         void handle_text_entered(sf::Event anEvent);

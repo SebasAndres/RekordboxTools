@@ -29,7 +29,7 @@ class ClassifierWrapper : public Functionality {
         int deleteTemporalFilesCreated();
 
         void executePipeline();
-        void loadClassificationResults(json anObject);
+        void loadClassificationResults(json& anObject);
 
         std::vector<int (ClassifierWrapper::*)()> pipeline;
 };

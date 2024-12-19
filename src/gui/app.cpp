@@ -1,12 +1,5 @@
 #include "app.h"
 
-std::string trim(const std::string& s) {
-    size_t start = s.find_first_not_of(" \t\n\r\f\v");
-    string ltrim = (start == std::string::npos) ? "" : s.substr(start);
-    size_t end = ltrim.find_last_not_of(" \t\n\r\f\v");
-    return (end == std::string::npos) ? "" : s.substr(0, end + 1);
-}
-
 void AppGui::load_background_image(){
     background_texture.loadFromFile("assets/img/studio.png");
     background_sprite.setTexture(background_texture);
@@ -17,37 +10,61 @@ void AppGui::load_background_image(){
 }
 
 void AppGui::initialize_text_boxs(){
-    src_text_box = designer->DesignTextBox("Source folder", true);
-    dst_text_box = designer->DesignTextBox("Destiny folder", false);
-
-    this->keyboard_owner = src_text_box;
-
-    gui_objects.push_back(src_text_box);
-    gui_objects.push_back(dst_text_box);
+    source_text_box = designer->DesignTextBox("Source folder", true);
+    destiny_text_box = designer->DesignTextBox("Destiny folder", false);
+    this->keyboard_owner = source_text_box;
+    gui_objects.push_back(source_text_box);
+    gui_objects.push_back(destiny_text_box);
 }
 
 void AppGui::initialize_buttons(){
     Button* extract_button = designer->DesignButton(
         "Extract",
         [](AppGui* app) {
-            std::string src = trim(app->src_folder_text());
-            std::string dst = trim(app->dst_folder_text());
-            Extractor* extractor = new Extractor(app, src, dst);
-            extractor->execute();          
+            if (app->ableToRun()){
+                app->disableFunctionalities();
+                std::string src = app->get_source_folder();
+                std::string dst = app->get_destiny_folder();
+                Extractor* extractor = new Extractor(app, src, dst);
+                extractor->execute();      
+                app->enableFunctionalities();    
+            }
+            else {
+                app->notify("Estoy ocupado bro");
+            }
         }
     );
     Button* classify_button = designer->DesignButton(
         "Classify",
         [](AppGui* app){
-            std::string src = trim(app->src_folder_text());
-            std::string dst = trim(app->dst_folder_text());
-            ClassifierWrapper* classifier = new ClassifierWrapper(app, src, dst);
-            classifier->execute();          
+            if (app->ableToRun()){
+                app->disableFunctionalities();
+                std::string src = app->get_source_folder();
+                std::string dst = app->get_destiny_folder();
+                ClassifierWrapper* classifier = new ClassifierWrapper(app, src, dst);
+                classifier->execute();          
+                app->enableFunctionalities();    
+            }
+            else {
+                app->notify("Estoy ocupado bro");
+            }
         }
     );
 
     gui_objects.push_back(extract_button);
     gui_objects.push_back(classify_button);
+}
+
+void AppGui::enableFunctionalities(){
+    this->able_to_run_functionality = true;
+}
+
+void AppGui::disableFunctionalities(){
+    this->able_to_run_functionality = false;
+}
+
+bool AppGui::ableToRun(){
+    return this->able_to_run_functionality;
 }
 
 AppGui::AppGui(int aWindowWidth, int aWindowHeight, string aTitle){
@@ -57,6 +74,7 @@ AppGui::AppGui(int aWindowWidth, int aWindowHeight, string aTitle){
     this->window = new sf::RenderWindow(sf::VideoMode(aWindowWidth, aWindowHeight), aTitle, sf::Style::Close);   
     this->window->setPosition(sf::Vector2i(100, 100));
     this->designer = new Designer(aWindowWidth, aWindowHeight);
+    enableFunctionalities();
     load_background_image();
     initialize_text_boxs();
     initialize_buttons();
@@ -127,10 +145,10 @@ bool AppGui::is_open(){
     return window->isOpen();
 }
 
-std::string AppGui::src_folder_text(){
-    return this->src_text_box->getContent();    
+std::string AppGui::get_source_folder(){
+    return this->source_text_box->getContentTrim();    
 }
 
-std::string AppGui::dst_folder_text(){
-    return this->dst_text_box->getContent();    
+std::string AppGui::get_destiny_folder(){
+    return this->destiny_text_box->getContentTrim();    
 }

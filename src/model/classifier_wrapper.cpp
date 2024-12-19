@@ -25,12 +25,7 @@ int ClassifierWrapper::classifyTracksByFeatures(){
     return executeCommand("python3 ml/classifiers/classifier_"+this->strategy+".py --src " + this->destinyFolder.string() + " --dst " + this->destinyFolder.string());
 }
 
-void createDirectoryIfNotExists(const fs::path& path) {
-    if (!fs::exists(path)) 
-        fs::create_directories(path);
-}
-
-void ClassifierWrapper::loadClassificationResults(json anObject){
+void ClassifierWrapper::loadClassificationResults(json& anObject){
     ifstream file(this->destinyFolder / "classification.json");
     if (!file.is_open()) { throw runtime_error("No se pudo abrir el archivo classification.json"); }
     file >> anObject;
@@ -40,19 +35,17 @@ int ClassifierWrapper::copyFilesBasedOnClassificationResults(){
     app->notify("Copiando archivos clasificados");
 
     json classificationResults;
-    loadClassificationResults(classificationResults); 
-    
+    loadClassificationResults(classificationResults);     
     for (auto& [category, files] : classificationResults.items()) {        
-        
-        fs::path categoryFolder = destinyFolder / category;
-        createDirectoryIfNotExists(categoryFolder);
-        
-        for (auto& file : files) {
 
+        fs::path categoryFolder = destinyFolder / category;
+        if (!fs::exists(categoryFolder)) { fs::create_directories(categoryFolder); }    
+
+        for (auto& file : files) {
             fs::path sourceTrack = sourceFolder / file;
             fs::path destinyTrack = categoryFolder / file;
-            
             try{ 
+                app->notify("Copying "+sourceTrack.filename().string()); 
                 fs::copy(sourceTrack, destinyTrack, fs::copy_options::overwrite_existing);
             }
             catch(const fs::filesystem_error& e){ 

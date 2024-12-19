@@ -23,6 +23,7 @@ class TextBox : public GUIObject {
         void receiveKeyboardInput(sf::Event event);
 
         std::string getContent();
+        std::string getContentTrim();
 
     private:
         sf::RectangleShape* box;

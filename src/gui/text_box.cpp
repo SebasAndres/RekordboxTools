@@ -81,6 +81,17 @@ void TextBox::clearTextBox(){
     text_view->setFillColor(sf::Color(128,128,128));   
 }
 
+std::string trim(const std::string& s) {
+    size_t start = s.find_first_not_of(" \t\n\r\f\v");
+    string ltrim = (start == std::string::npos) ? "" : s.substr(start);
+    size_t end = ltrim.find_last_not_of(" \t\n\r\f\v");
+    return (end == std::string::npos) ? "" : s.substr(0, end + 1);
+}
+
 std::string TextBox::getContent(){
     return content;
+}
+
+std::string TextBox::getContentTrim(){
+    return trim(content);   
 }
