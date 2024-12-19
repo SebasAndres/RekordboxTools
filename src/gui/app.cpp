@@ -1,5 +1,7 @@
 #include "app.h"
 
+#define ESCAPE_KEY_UNICODE 9
+
 void AppGui::load_background_image(){
     background_texture.loadFromFile("assets/img/studio.png");
     background_sprite.setTexture(background_texture);
@@ -15,6 +17,8 @@ void AppGui::initialize_text_boxs(){
     this->keyboard_owner = source_text_box;
     gui_objects.push_back(source_text_box);
     gui_objects.push_back(destiny_text_box);
+    keyboard_handlers.push_back(source_text_box);
+    keyboard_handlers.push_back(destiny_text_box);
 }
 
 void AppGui::initialize_buttons(){
@@ -91,13 +95,33 @@ void AppGui::notify(string aMessage){
     cout << aMessage << endl;
 }
 
-void AppGui::set_keyboard_ownership_to(TextBox* textBox){
+template <typename T>
+size_t indexOf(T* item, const vector<T*>& vec) {
+    auto it = std::find(vec.begin(), vec.end(), item);
+    if (it != vec.end()) {
+        return std::distance(vec.begin(), it);
+    } else {
+        throw std::runtime_error("Item not found in vector");
+    }
+}
+
+void AppGui::set_keyboard_ownership_to(TextBox* aTextBox){
     this->keyboard_owner->removeKeyboardOwnership();
-    this->keyboard_owner = textBox;
+    aTextBox->setAsKeyboardOwner();
+    this->keyboard_owner = aTextBox;
+    this->idx_current_keyboard_owner = indexOf(aTextBox, keyboard_handlers);
+}
+
+void AppGui::next_keyboard_owner(){
+    size_t next_owner_index = (idx_current_keyboard_owner + 1) % keyboard_handlers.size();
+    TextBox* next_owner = keyboard_handlers[next_owner_index];
+    set_keyboard_ownership_to(next_owner);
 }
 
 void AppGui::handle_text_entered(sf::Event event){
-    this->keyboard_owner->receiveKeyboardInput(event);
+    int keyPressed = event.text.unicode;
+    if (keyPressed == ESCAPE_KEY_UNICODE) { next_keyboard_owner(); }
+    else { this->keyboard_owner->receiveKeyboardInput(keyPressed); }
 }
 
 void AppGui::handle_mouse_movement(int x, int y){

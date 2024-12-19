@@ -14,7 +14,7 @@ Designer::Designer(int aWidth, int aHeight){
     this->buttonFont = "gui/fonts/Roboto/Roboto-Regular.ttf";
 
     // TEXTBOXS
-    this->textboxWidth = aWidth/3;
+    this->textboxWidth = aWidth/2.2;
     this->textboxHeight = 30;
     this->nextTextboxHorizontalPosition = this->dx_center(textboxWidth);
     this->nextTextboxVerticalPosition = aHeight * 0.40;

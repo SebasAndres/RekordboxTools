@@ -27,6 +27,8 @@ class AppGui {
         bool is_open();
 
         void set_keyboard_ownership_to(TextBox* aTextbox);
+        void next_keyboard_owner();
+        
         std::string get_source_folder();
         std::string get_destiny_folder();
 
@@ -45,7 +47,10 @@ class AppGui {
         Designer* designer;
         vector<GUIObject*> gui_objects;
 
+        int idx_current_keyboard_owner;
         TextBox* keyboard_owner;
+        vector<TextBox*> keyboard_handlers;
+
         TextBox* source_text_box;
         TextBox* destiny_text_box;
 

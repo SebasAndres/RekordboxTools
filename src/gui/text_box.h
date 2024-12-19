@@ -10,17 +10,17 @@ class AppGui; // Declaracion para evitar imports circulares
 
 class TextBox : public GUIObject {
     public: 
-        TextBox(int width, int height, int x, int y, std::string fontPath, std::string placeholder, bool is_keyboard_owner);
+        TextBox(int aWidth, int aHeight, int x, int y, std::string aFontPath, std::string aPlaceholder, bool aKeyboardOwnershipStatus);
         ~TextBox();
 
-        void drawOnTarget(sf::RenderWindow* window) override;
+        void drawOnTarget(sf::RenderWindow* aWindow) override;
         void mouseOverIt() override;
         void mouseNotOverIt() override;
-        void mousePressed(AppGui* app) override;
+        void mousePressed(AppGui* anApp) override;
 
         void setAsKeyboardOwner();
         void removeKeyboardOwnership();
-        void receiveKeyboardInput(sf::Event event);
+        void receiveKeyboardInput(int aKeyUnicode);
 
         std::string getContent();
         std::string getContentTrim();
@@ -28,12 +28,17 @@ class TextBox : public GUIObject {
     private:
         sf::RectangleShape* box;
         sf::Text* text_view;
+        sf::CircleShape* circle_ownership;
+
         sf::Color bgColor;
         sf::Color fgColor;
         sf::Font font;
 
         std::string placeholder;
         std::string content;
+
+        int charsPerBox;
+        std::string fitTextInBox(std::string& aText);
 
         bool is_keyboard_owner;
         bool written;
