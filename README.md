@@ -4,5 +4,9 @@ Scripts para trabajar con memorias externas formateadas para trabajar con PIONEE
 - Clasificación de los temas en el pendrive
 
 ## TODO
+> Diseño:
 - Delegar el computo de dx/dy/width/height a un nuevo objeto diseñador.
+- Procesar trim como responsabilidad del TextBox.
+
+> Modelo:
 - Armar un clasificador puro en C++ y subclasificar el wrapper de python 

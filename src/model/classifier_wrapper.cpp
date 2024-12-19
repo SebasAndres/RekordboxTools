@@ -1,6 +1,11 @@
 #include "classifier_wrapper.h"
+#include "../gui/app.h"
 
-ClassifierWrapper::ClassifierWrapper(fs::path src, fs::path dst) : Functionality(src, dst) { 
+ClassifierWrapper::ClassifierWrapper(AppGui* app, fs::path sourceFolder, fs::path destinyFolder) : Functionality(app, sourceFolder, destinyFolder) { 
+    if (status != Status::RUNNABLE){
+        app->notify("Inicializacion incorrecta de ClassifierWrapper");
+        return;
+    }
     strategy = "tempo";
     pipeline.push_back(&ClassifierWrapper::extractFeaturesFromTracks);
     pipeline.push_back(&ClassifierWrapper::classifyTracksByFeatures);
@@ -8,41 +13,50 @@ ClassifierWrapper::ClassifierWrapper(fs::path src, fs::path dst) : Functionality
     pipeline.push_back(&ClassifierWrapper::deleteTemporalFilesCreated);
 }
 
-bool executeCommand(string command){
-    return system(command.c_str());
-}
+bool executeCommand(string command){ return system(command.c_str()); }
 
 int ClassifierWrapper::extractFeaturesFromTracks(){
-    return executeCommand("python3 ml/extractors/extractor_"+strategy+".py --src " + src.string() + " --dst " + dst.string());
+    app->notify("Extrayendo features");
+    return executeCommand("python3 ml/extractors/extractor_"+this->strategy+".py --src " + this->sourceFolder.string() + " --dst " + this->destinyFolder.string());
 }
 
 int ClassifierWrapper::classifyTracksByFeatures(){
-    return executeCommand("python3 ml/classifiers/classifier_"+strategy+".py --src " + dst.string() + " --dst " + dst.string());
+    app->notify("Clasificando tracks");
+    return executeCommand("python3 ml/classifiers/classifier_"+this->strategy+".py --src " + this->destinyFolder.string() + " --dst " + this->destinyFolder.string());
 }
 
 void createDirectoryIfNotExists(const fs::path& path) {
-    if (!fs::exists(path)) {
+    if (!fs::exists(path)) 
         fs::create_directories(path);
-    }
+}
+
+void ClassifierWrapper::loadClassificationResults(json anObject){
+    ifstream file(this->destinyFolder / "classification.json");
+    if (!file.is_open()) { throw runtime_error("No se pudo abrir el archivo classification.json"); }
+    file >> anObject;
 }
 
 int ClassifierWrapper::copyFilesBasedOnClassificationResults(){    
-    ifstream file(dst / "classification.json");
-    if (!file.is_open()) { throw runtime_error("No se pudo abrir el archivo classification.json"); }
+    app->notify("Copiando archivos clasificados");
+
     json classificationResults;
-    file >> classificationResults;
-    for (auto& [category, files] : classificationResults.items()) {
-        cout << "> Guardando categoria " << category << "bpm" << endl;
-        fs::path categoryPath = dst / category;
-        createDirectoryIfNotExists(categoryPath);
+    loadClassificationResults(classificationResults); 
+    
+    for (auto& [category, files] : classificationResults.items()) {        
+        
+        fs::path categoryFolder = destinyFolder / category;
+        createDirectoryIfNotExists(categoryFolder);
+        
         for (auto& file : files) {
-            fs::path srcTrackPath = this->src / file;
-            fs::path dstTrackPath = this->dst / category / file;
+
+            fs::path sourceTrack = sourceFolder / file;
+            fs::path destinyTrack = categoryFolder / file;
+            
             try{ 
-                fs::copy(srcTrackPath, dstTrackPath, fs::copy_options::overwrite_existing);
+                fs::copy(sourceTrack, destinyTrack, fs::copy_options::overwrite_existing);
             }
             catch(const fs::filesystem_error& e){ 
-                cout << e.what() << endl; 
+                app->notify(e.what()); 
             };
         }
     }
@@ -50,18 +64,22 @@ int ClassifierWrapper::copyFilesBasedOnClassificationResults(){
 }
 
 int ClassifierWrapper::deleteTemporalFilesCreated(){
-    cout << "> Borrando archivos temporales. " << endl;
-    return executeCommand("rm "+dst.string()+"/features.csv") & executeCommand("rm "+dst.string()+"/classification.json");
+    app->notify("Borrando archivos temporales");
+    return executeCommand("rm "+this->destinyFolder.string()+"/features.csv") & executeCommand("rm "+this->destinyFolder.string()+"/classification.json");
 }
 
 void ClassifierWrapper::execute() {    
+    if (status != Status::RUNNABLE){ return; }
+    executePipeline();
+}
+
+void ClassifierWrapper::executePipeline(){
     for (auto func : pipeline) {
-        cout << "----------------------------------------------------------------------------------------------------" << endl;
         int result = (this->*func)(); 
         if (result != 0) {
             throw std::runtime_error("Error al ejecutar una etapa del pipeline");
             break;
         }
     }
-    cout << "----------------------------------------------------------------------------------------------------" << endl;
 }
+

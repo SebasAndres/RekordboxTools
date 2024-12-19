@@ -14,26 +14,19 @@ TextBox::TextBox(
     this->height = height;
     this->x = x;
     this->y = y;
-
     this->placeholder = placeholder;
     this->is_keyboard_owner = is_keyboard_owner;
-
     this->written = false;
-
-    if (!font.loadFromFile(fontPath)) {
+    if (!font.loadFromFile(fontPath))
         std::cerr << "Error: No se pudo cargar la fuente." << std::endl;
-    }
-
     box = new sf::RectangleShape(sf::Vector2f(width, height));
     box->setPosition(x, y);
     box->setFillColor(sf::Color::White);
-
     text_view = new sf::Text();
     text_view->setFont(font);
     text_view->setString(placeholder);
     text_view->setCharacterSize(20);
     text_view->setPosition(x + 10, y + 3); 
-
     text_view->setFillColor(sf::Color(128,128,128));
     content = "";
 }
