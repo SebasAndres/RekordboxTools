@@ -3,3 +3,4 @@ src/main
 .vscode
 *.o
 .gdb_history
+.vscode
