@@ -8,8 +8,8 @@ Logger::Logger(
     sf::Color aBackgroundColor,
     sf::Color aFontColor,
     sf::Font aFont,
-    int textSize){
-
+    int textSize) {
+    
     this->width = width;
     this->height = height;
     this->x = x;
@@ -17,6 +17,7 @@ Logger::Logger(
 
     this->bgColor = aBackgroundColor;
     this->fontColor = aFontColor;    
+
     this->font = aFont;
 
     this->box = new sf::RectangleShape(sf::Vector2f(width, height));

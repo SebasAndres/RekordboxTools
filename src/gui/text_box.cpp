@@ -10,14 +10,13 @@ TextBox::TextBox(
     int x,
     int y,
     sf::Font aFont,
-    std::string aPlaceholder,
+    string aPlaceholder,
     bool aKeyboardOwnershipStatus){
 
     this->width = width;
     this->height = height;
     this->x = x;
     this->y = y;
-
     this->font = aFont;
     this->placeholder = aPlaceholder;
     this->is_keyboard_owner = aKeyboardOwnershipStatus;
@@ -55,12 +54,6 @@ void TextBox::drawOnTarget(sf::RenderWindow* aWindow){
     if (is_keyboard_owner)
         aWindow->draw(*circle_ownership);
 }
-
-void TextBox::mouseOverIt() {
-};
-
-void TextBox::mouseNotOverIt(){
-};
 
 void TextBox::mousePressed(AppGui* app){
     setAsKeyboardOwner();
@@ -119,3 +112,7 @@ std::string TextBox::getContent(){
 std::string TextBox::getContentTrim(){
     return trim(content);   
 }
+
+void TextBox::mouseOverIt(){};
+
+void TextBox::mouseNotOverIt(){};

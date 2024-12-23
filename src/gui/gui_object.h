@@ -12,7 +12,6 @@ class GUIObject{
         int height;
         int x;
         int y;
-
         virtual void drawOnTarget(sf::RenderWindow* target) = 0;
         virtual void mouseOverIt() = 0;
         virtual void mouseNotOverIt() = 0; 
@@ -21,7 +20,6 @@ class GUIObject{
             return x >= this->x && x <= this->x + this->width &&
                 y >= this->y && y <= this->y + this->height;
         }
-
 };
 
 #endif
