@@ -29,7 +29,7 @@ class Designer {
         int buttonHeight;
         int nextButtonHorizontalPosition;
         int buttonVerticalPadding;
-        string buttonFont;
+        sf::Font buttonFont;
         int nextButtonVerticalPosition;
 
         // TEXTBOXS

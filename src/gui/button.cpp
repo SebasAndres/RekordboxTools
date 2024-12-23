@@ -12,23 +12,23 @@ Button::Button(
     int x,
     int y,
     sf::Color bgColor,
-    std::string fontPath,
-    std::string text,
-    std::function<void(AppGui*)> onClickFunc)      
+    sf::Font aFont,
+    string text,
+    function<void(AppGui*)> onClickFunc)      
     : onClick(onClickFunc), bgColor(bgColor) {
 
     this->width = width;
     this->height = height;
     this->x = x;
     this->y = y;
+    this->font = aFont;
+
     box = new sf::RectangleShape(sf::Vector2f(width, height));
     box->setPosition(x, y);
     box->setFillColor(bgColor);
-    if (!font.loadFromFile(fontPath)) {
-        std::cerr << "Error: No se pudo cargar la fuente" << std::endl;
-    }
+
     text_view = new sf::Text();
-    text_view->setFont(font);
+    text_view->setFont(this->font);
     text_view->setString(text);
     text_view->setCharacterSize(height/3.7);
     if (isLightColored(this->bgColor)){
@@ -68,7 +68,7 @@ void Button::mouseNotOverIt(){
 }
 
 void Button::mousePressed(AppGui* app){
-    std::thread([this, app]() {
+    thread([this, app]() {
         this->onClick(app);
     }).detach();
 }

@@ -8,6 +8,8 @@
 #include <SFML/Graphics.hpp>
 #include "gui_object.h"
 
+using namespace std;
+
 class AppGui; // Declaracion para evitar imports circulares
 
 class Button : public GUIObject {
@@ -18,9 +20,9 @@ class Button : public GUIObject {
             int x,
             int y,
             sf::Color color,
-            std::string fontPath,
-            std::string text,
-            std::function<void(AppGui*)> onClickFunc);
+            sf::Font aFont,
+            string text,
+            function<void(AppGui*)> onClickFunc);
         ~Button();
 
         void drawOnTarget(sf::RenderWindow* window) override;

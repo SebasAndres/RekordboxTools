@@ -10,7 +10,8 @@ Designer::Designer(int aWidth, int aHeight){
     this->nextButtonHorizontalPosition = this->dx_center(buttonWidth);
     this->nextButtonVerticalPosition = aHeight * 0.6;
     this->buttonVerticalPadding = buttonHeight/4;
-    this->buttonFont = "gui/fonts/Roboto/Roboto-Regular.ttf";
+    if (!buttonFont.loadFromFile("gui/fonts/Roboto/Roboto-Regular.ttf"))
+        std::cerr << "Error: No se pudo cargar la fuente." << std::endl;
 
     // TEXTBOXS
     this->textboxWidth = aWidth/2.2;
@@ -19,7 +20,6 @@ Designer::Designer(int aWidth, int aHeight){
     this->nextTextboxVerticalPosition = aHeight * 0.40;
     this->textboxVerticalPadding = textboxHeight/3.5;
     this->textboxFontPath = "gui/fonts/Roboto/Roboto-Regular.ttf";
-
     if (!textboxFont.loadFromFile(textboxFontPath))
         std::cerr << "Error: No se pudo cargar la fuente." << std::endl;
 }
