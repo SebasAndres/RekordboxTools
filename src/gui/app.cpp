@@ -31,37 +31,42 @@ void AppGui::initialize_text_boxs(){
     keyboard_handlers.push_back(destiny_text_box);
 }
 
+void AppGui::check_and_execute(function<void()> aFunction){
+    if (this->able_to_run_functionality){
+        this->able_to_run_functionality = false;
+        aFunction();
+        this->able_to_run_functionality = true;
+    }
+    else {
+        this->notify("Estoy ocupado bro");
+    }
+}
+
 void AppGui::initialize_buttons(){
     Button* extract_button = designer->DesignButton(
         "Extract",
         [](AppGui* app) {
-            if (app->able_to_run_functions()){
-                app->disable_functionalities();
-                std::string src = app->get_source_folder();
-                std::string dst = app->get_destiny_folder();
-                Extractor* extractor = new Extractor(app, src, dst);
-                extractor->execute();      
-                app->enable_functionalities();    
-            }
-            else {
-                app->notify("Estoy ocupado bro");
-            }
+            app->check_and_execute(
+                [app](){
+                    std::string src = app->get_source_folder();
+                    std::string dst = app->get_destiny_folder();
+                    Extractor* extractor = new Extractor(app, src, dst);
+                    extractor->execute();      
+                }
+            );
         }
     );
     Button* classify_button = designer->DesignButton(
         "Classify",
         [](AppGui* app){
-            if (app->able_to_run_functions()){
-                app->disable_functionalities();
-                std::string src = app->get_source_folder();
-                std::string dst = app->get_destiny_folder();
-                ClassifierWrapper* classifier = new ClassifierWrapper(app, src, dst);
-                classifier->execute();          
-                app->enable_functionalities();    
-            }
-            else {
-                app->notify("Estoy ocupado bro");
-            }
+            app->check_and_execute(
+                [app](){
+                    std::string src = app->get_source_folder();
+                    std::string dst = app->get_destiny_folder();
+                    ClassifierWrapper* classifier = new ClassifierWrapper(app, src, dst);
+                    classifier->execute();          
+                }
+            );
         }
     );
     gui_objects.push_back(extract_button);
@@ -72,18 +77,6 @@ void AppGui::initialize_gui_logger(){
     this->gui_logger = designer->DesignGuiLogger();
     this->gui_logger->setMessage("🧪");
     gui_objects.push_back(gui_logger);
-}
-
-void AppGui::enable_functionalities(){
-    this->able_to_run_functionality = true;
-}
-
-void AppGui::disable_functionalities(){
-    this->able_to_run_functionality = false;
-}
-
-bool AppGui::able_to_run_functions(){
-    return this->able_to_run_functionality;
 }
 
 AppGui::AppGui(int aWindowWidth, int aWindowHeight, string aTitle){
@@ -97,7 +90,7 @@ AppGui::AppGui(int aWindowWidth, int aWindowHeight, string aTitle){
     initialize_text_boxs();
     initialize_buttons();
     initialize_gui_logger();
-    enable_functionalities();
+    this->able_to_run_functionality = true;
 }
 
 AppGui::~AppGui() {

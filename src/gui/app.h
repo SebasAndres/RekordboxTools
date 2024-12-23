@@ -27,16 +27,14 @@ class AppGui {
         bool is_open();
 
         void set_keyboard_ownership_to(TextBox* aTextbox);
-        void next_keyboard_owner();
-        
+        void next_keyboard_owner();       
         std::string get_source_folder();
         std::string get_destiny_folder();
 
-        bool able_to_run_functions();
-        void enable_functionalities();
-        void disable_functionalities();
-
         void notify(string aMessage);
+
+        void check_and_execute(function<void()> aClosure);
+        bool able_to_run_functionality;
 
     private:
         int window_width;
@@ -56,8 +54,6 @@ class AppGui {
 
         sf::Texture background_texture;
         sf::Sprite background_sprite;      
-
-        bool able_to_run_functionality;
 
         Logger* gui_logger;
 
