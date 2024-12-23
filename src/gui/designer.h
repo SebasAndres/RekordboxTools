@@ -6,6 +6,7 @@
 
 #include "text_box.h"
 #include "button.h"
+#include "logger.h"
 
 using namespace std;
 
@@ -15,6 +16,7 @@ class Designer {
 
         TextBox* DesignTextBox(string aText, bool aKeyboardOwnershipStatus);
         Button* DesignButton(string aText,  function<void(AppGui*)> aFunction);
+        Logger* DesignGuiLogger();
 
     private:
         int window_width;
@@ -35,7 +37,8 @@ class Designer {
         int textboxHeight;
         int nextTextboxHorizontalPosition;
         int textboxVerticalPadding;
-        string textboxFont;
+        string textboxFontPath;
+        sf::Font textboxFont;
         int nextTextboxVerticalPosition;
 };
 

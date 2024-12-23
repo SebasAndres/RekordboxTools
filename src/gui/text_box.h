@@ -10,7 +10,7 @@ class AppGui; // Declaracion para evitar imports circulares
 
 class TextBox : public GUIObject {
     public: 
-        TextBox(int aWidth, int aHeight, int x, int y, std::string aFontPath, std::string aPlaceholder, bool aKeyboardOwnershipStatus);
+        TextBox(int aWidth, int aHeight, int x, int y, sf::Font aFont, std::string aPlaceholder, bool aKeyboardOwnershipStatus);
         ~TextBox();
 
         void drawOnTarget(sf::RenderWindow* aWindow) override;

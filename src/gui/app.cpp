@@ -2,6 +2,16 @@
 
 #define ESCAPE_KEY_UNICODE 9
 
+template <typename T>
+size_t indexOf(T* item, const vector<T*>& vec) {
+    auto it = std::find(vec.begin(), vec.end(), item);
+    if (it != vec.end()) {
+        return std::distance(vec.begin(), it);
+    } else {
+        throw std::runtime_error("Item not found in vector");
+    }
+}
+
 void AppGui::load_background_image(){
     background_texture.loadFromFile("assets/img/studio.png");
     background_sprite.setTexture(background_texture);
@@ -25,13 +35,13 @@ void AppGui::initialize_buttons(){
     Button* extract_button = designer->DesignButton(
         "Extract",
         [](AppGui* app) {
-            if (app->ableToRun()){
-                app->disableFunctionalities();
+            if (app->able_to_run_functions()){
+                app->disable_functionalities();
                 std::string src = app->get_source_folder();
                 std::string dst = app->get_destiny_folder();
                 Extractor* extractor = new Extractor(app, src, dst);
                 extractor->execute();      
-                app->enableFunctionalities();    
+                app->enable_functionalities();    
             }
             else {
                 app->notify("Estoy ocupado bro");
@@ -41,33 +51,38 @@ void AppGui::initialize_buttons(){
     Button* classify_button = designer->DesignButton(
         "Classify",
         [](AppGui* app){
-            if (app->ableToRun()){
-                app->disableFunctionalities();
+            if (app->able_to_run_functions()){
+                app->disable_functionalities();
                 std::string src = app->get_source_folder();
                 std::string dst = app->get_destiny_folder();
                 ClassifierWrapper* classifier = new ClassifierWrapper(app, src, dst);
                 classifier->execute();          
-                app->enableFunctionalities();    
+                app->enable_functionalities();    
             }
             else {
                 app->notify("Estoy ocupado bro");
             }
         }
     );
-
     gui_objects.push_back(extract_button);
     gui_objects.push_back(classify_button);
 }
 
-void AppGui::enableFunctionalities(){
+void AppGui::initialize_gui_logger(){
+    this->gui_logger = designer->DesignGuiLogger();
+    this->gui_logger->setMessage("🧪");
+    gui_objects.push_back(gui_logger);
+}
+
+void AppGui::enable_functionalities(){
     this->able_to_run_functionality = true;
 }
 
-void AppGui::disableFunctionalities(){
+void AppGui::disable_functionalities(){
     this->able_to_run_functionality = false;
 }
 
-bool AppGui::ableToRun(){
+bool AppGui::able_to_run_functions(){
     return this->able_to_run_functionality;
 }
 
@@ -78,10 +93,11 @@ AppGui::AppGui(int aWindowWidth, int aWindowHeight, string aTitle){
     this->window = new sf::RenderWindow(sf::VideoMode(aWindowWidth, aWindowHeight), aTitle, sf::Style::Close);   
     this->window->setPosition(sf::Vector2i(100, 100));
     this->designer = new Designer(aWindowWidth, aWindowHeight);
-    enableFunctionalities();
     load_background_image();
     initialize_text_boxs();
     initialize_buttons();
+    initialize_gui_logger();
+    enable_functionalities();
 }
 
 AppGui::~AppGui() {
@@ -93,16 +109,7 @@ AppGui::~AppGui() {
 
 void AppGui::notify(string aMessage){
     cout << aMessage << endl;
-}
-
-template <typename T>
-size_t indexOf(T* item, const vector<T*>& vec) {
-    auto it = std::find(vec.begin(), vec.end(), item);
-    if (it != vec.end()) {
-        return std::distance(vec.begin(), it);
-    } else {
-        throw std::runtime_error("Item not found in vector");
-    }
+    gui_logger->setMessage(aMessage);
 }
 
 void AppGui::set_keyboard_ownership_to(TextBox* aTextBox){

@@ -32,9 +32,9 @@ class AppGui {
         std::string get_source_folder();
         std::string get_destiny_folder();
 
-        bool ableToRun();
-        void enableFunctionalities();
-        void disableFunctionalities();
+        bool able_to_run_functions();
+        void enable_functionalities();
+        void disable_functionalities();
 
         void notify(string aMessage);
 
@@ -59,6 +59,8 @@ class AppGui {
 
         bool able_to_run_functionality;
 
+        Logger* gui_logger;
+
         // Handlers
         void handle_text_entered(sf::Event anEvent);
         void handle_mouse_movement(int x, int y);
@@ -68,5 +70,6 @@ class AppGui {
         void load_background_image();
         void initialize_buttons();
         void initialize_text_boxs();
+        void initialize_gui_logger();
 };
 #endif

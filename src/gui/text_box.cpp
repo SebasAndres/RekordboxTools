@@ -9,21 +9,19 @@ TextBox::TextBox(
     int height,
     int x,
     int y,
-    std::string fontPath,
-    std::string placeholder,
-    bool is_keyboard_owner){
+    sf::Font aFont,
+    std::string aPlaceholder,
+    bool aKeyboardOwnershipStatus){
 
     this->width = width;
     this->height = height;
     this->x = x;
     this->y = y;
-    this->placeholder = placeholder;
-    this->is_keyboard_owner = is_keyboard_owner;
+
+    this->font = aFont;
+    this->placeholder = aPlaceholder;
+    this->is_keyboard_owner = aKeyboardOwnershipStatus;
     this->written = false;
-
-    if (!font.loadFromFile(fontPath))
-        std::cerr << "Error: No se pudo cargar la fuente." << std::endl;
-
     int charSize = 20;
 
     box = new sf::RectangleShape(sf::Vector2f(width, height));
@@ -33,7 +31,7 @@ TextBox::TextBox(
 
     text_view = new sf::Text();
     text_view->setFont(font);
-    text_view->setString(placeholder);
+    text_view->setString(aPlaceholder);
     text_view->setCharacterSize(charSize);
     text_view->setPosition(x + 5, y + 3); 
     text_view->setFillColor(sf::Color(128,128,128));
@@ -71,6 +69,7 @@ void TextBox::mousePressed(AppGui* app){
 
 void TextBox::setAsKeyboardOwner(){
     this->content = "";
+    this->text_view->setString(content);
     this->is_keyboard_owner = true;
 }
 
