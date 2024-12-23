@@ -10,9 +10,5 @@ Functionality::Functionality(AppGui* anApp, fs::path aSourceFolder, fs::path aDe
       }
       else {
             this->status=Status::INVALID_INPUT;
-            cout << aSourceFolder;
-            cout << endl;
-            cout << aDestinyFolder;
-            cout << endl;
       }
 }
