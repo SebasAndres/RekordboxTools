@@ -33,11 +33,9 @@ class Button : public GUIObject {
     private:
         sf::RectangleShape* box;
         sf::Text* text_view;
-
         sf::Color bgColor;
         sf::Color fgColor;
         sf::Font font;
-
         std::function<void(AppGui*)> onClick; 
 };
 
