@@ -1,47 +1,17 @@
 #include <iostream>
 #include <filesystem>
-namespace fs = std::filesystem;
 
-// internal
-#include "model/functionality.h"
-#include "model/extractor.h"
-#include "model/classifier_wrapper.h"
+// GUI
+#include "gui/app.h"
 
 using namespace std;
+namespace fs = filesystem;
 
-// Factory Method
-Functionality* setUpFunctionality(string type){
-      if (type=="extract"){
-            cout << "* Source path: "; fs::path source; cin >> source;
-            cout << "* Destiny path: "; fs::path destiny; cin >> destiny;
-            return new Extractor(source, destiny);  
+int main(void){     
+      AppGui app = AppGui(600, 500, "Rekordbox Tools");
+      while (app.is_open()) {
+            app.handle_events();
+            app.render();
       }
-      else if (type == "classify"){
-            cout << "* Source path: "; fs::path source; cin >> source;
-            cout << "* Destiny path: "; fs::path destiny; cin >> destiny;
-            return new ClassifierWrapper(source, destiny);        
-      }
-      return nullptr; 
-}
-
-int main(void){      
-
-      cout << "Functionality: ";
-      string typeOfFunctionality; cin >> typeOfFunctionality;
-
-      try{
-            Functionality* functionality = setUpFunctionality(typeOfFunctionality);
-            if (functionality == nullptr) { throw::runtime_error("Invalid functionality selected"); }
-            functionality->execute();   
-            delete functionality;
-      }
-      catch(const std::runtime_error& e){
-            cout << endl;
-            cout << "----------------------------------------------------------------------------------------------------" << endl;
-            cout << "ERROR | No se ejecutó la funcionalidad" << endl;
-            cout << e.what() << endl;
-            cout << "----------------------------------------------------------------------------------------------------" << endl;
-      }
-
-      
+      return 0;      
 }

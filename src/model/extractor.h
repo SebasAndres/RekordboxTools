@@ -6,21 +6,19 @@
 #include "functionality.h"
 #include <unordered_set>
 
+class AppGui; 
+
 class Extractor : public Functionality {
       public:             
-            Extractor(fs::path src, fs::path dst);
+            Extractor(AppGui* anApp, fs::path aSourceFolder, fs::path aDestinyFolder);
             void execute() override; 
-            uint8_t isAllowedExtension(const string& extension);
+      
+      private:                  
+            void copyFile(fs::path aFileToCopy);
+            void registerNotCopiedFile(const fs::path& aNotCopiedFile);
+            uint8_t isAllowedExtension(const string& anExtension);
 
-      private:
-            unordered_set<fs::path> copiedFiles;
-            uint32_t copiedCounter;
-            fs::path* notCopiedFiles;
-            uint32_t notCopiedCounter;
-            
-            fs::path getDestinyName(fs::path file2copy);
-            void registerNotCopiedFile(const fs::path& not_copied_file);
-            void extractAudioFeaturesAndSaveThem();
+            unordered_set<fs::path> copiedFiles;      
 };
 
 #endif 

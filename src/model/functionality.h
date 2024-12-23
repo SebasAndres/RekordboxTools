@@ -7,18 +7,29 @@
 #include <filesystem>
 #include "defines.h"
 
+class AppGui;
+
 using namespace std;
 namespace fs = filesystem;
 
+enum class Status {
+    RUNNABLE,
+    INVALID_INPUT,
+    PROCESSING,
+    COMPLETED
+};
+
 class Functionality {
       public:
-            Functionality(fs::path src, fs::path dst);
-            virtual ~Functionality() = default; // Destructor virtual
-            virtual void execute() = 0; // Método puramente virtual  
-            
+            Functionality(AppGui* anApp, fs::path aSourceFolder, fs::path aDestinyFolder);
+            virtual ~Functionality() = default; 
+            virtual void execute() = 0; 
+
       protected:
-            fs::path src;
-            fs::path dst;
+            fs::path sourceFolder;
+            fs::path destinyFolder;
+            AppGui* app;
+            Status status;
 };
 
 #endif

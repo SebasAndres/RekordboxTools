@@ -2,28 +2,36 @@
 #define CLASSIFIER_WRAPPER_H
 
 #include <filesystem>
-#include "functionality.h"
 #include <vector>
-#include <cstdlib> // 
+#include <cstdlib> 
 #include <stdexcept>
 #include <nlohmann/json.hpp>
 
 namespace fs = std::filesystem;
 using json = nlohmann::json;
 
+// internal
+#include "functionality.h"
+
+class AppGui; 
+
 class ClassifierWrapper : public Functionality {
     public:
-        ClassifierWrapper(fs::path src, fs::path dst);
+        ClassifierWrapper(AppGui* anApp, fs::path aSourceFolder, fs::path aDestinyFolder);
         void execute() override; 
 
-        string strategy;
-        vector<int (ClassifierWrapper::*)()> pipeline;
+        std::string strategy;
 
     private:
         int extractFeaturesFromTracks();
         int classifyTracksByFeatures();
         int copyFilesBasedOnClassificationResults();
         int deleteTemporalFilesCreated();
+
+        void executePipeline();
+        void loadClassificationResults(json& anObject);
+
+        std::vector<int (ClassifierWrapper::*)()> pipeline;
 };
 
 #endif 
